@@ -1,10 +1,20 @@
-import Axios from 'axios'
-import jsonwebtoken from 'jsonwebtoken'
 import { createLogger } from '../../utils/logger.mjs'
+import axios from "axios";
+import jwt from "jsonwebtoken";
+import jwksClient from "jwks-rsa";
+
+// Configure the JWKS client
+const client = jwksClient({
+  jwksUri: "https://fremfi.auth0.com/.well-known/jwks.json",
+});
+
 
 const logger = createLogger('auth')
 
-const jwksUrl = 'https://test-endpoint.auth0.com/.well-known/jwks.json'
+const getSigningKey = async (kid) => {
+  const key = await client.getSigningKey(kid);
+  return key.getPublicKey();
+};
 
 export async function handler(event) {
   try {
@@ -44,11 +54,29 @@ export async function handler(event) {
 
 async function verifyToken(authHeader) {
   const token = getToken(authHeader)
-  const jwt = jsonwebtoken.decode(token, { complete: true })
 
-  // TODO: Implement token verification
+  try {
+    const decodedHeader = jwt.decode(token, { complete: true });
+    if (!decodedHeader?.header?.kid) {
+      throw new Error("Invalid token header");
+    }
+
+    // Get the signing key using the kid
+    const signingKey = await getSigningKey(decodedHeader.header.kid);
+
+    // Verify the JWT
+    const decodedToken = jwt.verify(token, signingKey, {
+      audience: "https://fremfi.auth0.com/api/v2/",
+      issuer: "https://fremfi.auth0.com/",
+    });
+    return decodedToken;
+
+  } catch (error) {
+    logger.error('Token verification failed', { error })
+  }
   return undefined;
 }
+
 
 function getToken(authHeader) {
   if (!authHeader) throw new Error('No authentication header')

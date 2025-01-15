@@ -118,29 +118,29 @@ export function Todos() {
   const [todos, setTodos] = useState([])
   const [loadingTodos, setLoadingTodos] = useState(true)
   const navigate = useNavigate()
+  //
+  // console.log('User', {
+  //   name: user.name,
+  //   email: user.email
+  // })
 
-  console.log('User', {
-    name: user.name,
-    email: user.email
-  })
-
-  useEffect(() => {
-    async function foo() {
-      try {
-        const accessToken = await getAccessTokenSilently({
-          audience: `https://test-endpoint.auth0.com/api/v2/`,
-          scope: 'read:todos'
-        })
-        console.log('Access token: ' + accessToken)
-        const todos = await getTodos(accessToken)
-        setTodos(todos)
-        setLoadingTodos(false)
-      } catch (e) {
-        alert(`Failed to fetch todos: ${e.message}`)
-      }
-    }
-    foo()
-  }, [getAccessTokenSilently])
+  // useEffect(() => {
+  //   async function foo() {
+  //     try {
+  //       const accessToken = await getAccessTokenSilently({
+  //         audience: `https://test-endpoint.auth0.com/api/v2/`,
+  //         scope: 'read:todos'
+  //       })
+  //       console.log('Access token: ' + accessToken)
+  //       const todos = await getTodos(accessToken)
+  //       setTodos(todos)
+  //       setLoadingTodos(false)
+  //     } catch (e) {
+  //       alert(`Failed to fetch todos: ${e.message}`)
+  //     }
+  //   }
+  //   foo()
+  // }, [getAccessTokenSilently])
 
   return (
     <div>
@@ -148,7 +148,7 @@ export function Todos() {
 
       <NewTodoInput onNewTodo={(newTodo) => setTodos([...todos, newTodo])} />
 
-      {renderTodos(loadingTodos, todos)}
+      {/*{renderTodos(loadingTodos, todos)}*/}
     </div>
   )
 }
