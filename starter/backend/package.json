@@ -29,6 +29,7 @@
     "winston": "^3.8.2"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.147"
+    "@types/aws-lambda": "^8.10.147",
+    "serverless-plugin-tracing": "^2.0.0"
   }
 }

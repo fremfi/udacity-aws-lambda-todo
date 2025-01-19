@@ -27,7 +27,7 @@ export async function createTodo(idToken, newTodo) {
       }
     }
   )
-  return response.data.item
+  return response.data.newTodo
 }
 
 export async function patchTodo(idToken, todoId, updatedTodo) {

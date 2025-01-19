@@ -1,5 +1,4 @@
 import { createLogger } from '../../utils/logger.mjs'
-import axios from "axios";
 import jwt from "jsonwebtoken";
 import jwksClient from "jwks-rsa";
 
@@ -7,7 +6,6 @@ import jwksClient from "jwks-rsa";
 const client = jwksClient({
   jwksUri: "https://fremfi.auth0.com/.well-known/jwks.json",
 });
-
 
 const logger = createLogger('auth')
 
@@ -76,7 +74,6 @@ async function verifyToken(authHeader) {
   }
   return undefined;
 }
-
 
 function getToken(authHeader) {
   if (!authHeader) throw new Error('No authentication header')

@@ -77,7 +77,7 @@ export function Todos() {
   async function onTodoDelete(todoId) {
     try {
       const accessToken = await getAccessTokenSilently({
-        audience: `https://test-endpoint.auth0.com/api/v2/`,
+        audience: `https://fremfi.auth0.com/api/v2/`,
         scope: 'delete:todo'
       })
       await deleteTodo(accessToken, todoId)
@@ -91,9 +91,10 @@ export function Todos() {
     try {
       const todo = todos[pos]
       const accessToken = await getAccessTokenSilently({
-        audience: `https://test-endpoint.auth0.com/api/v2/`,
+        audience: `https://fremfi.auth0.com/api/v2/`,
         scope: 'write:todo'
       })
+      console.log("patching todo")
       await patchTodo(accessToken, todo.todoId, {
         name: todo.name,
         dueDate: todo.dueDate,
@@ -118,29 +119,24 @@ export function Todos() {
   const [todos, setTodos] = useState([])
   const [loadingTodos, setLoadingTodos] = useState(true)
   const navigate = useNavigate()
-  //
-  // console.log('User', {
-  //   name: user.name,
-  //   email: user.email
-  // })
 
-  // useEffect(() => {
-  //   async function foo() {
-  //     try {
-  //       const accessToken = await getAccessTokenSilently({
-  //         audience: `https://test-endpoint.auth0.com/api/v2/`,
-  //         scope: 'read:todos'
-  //       })
-  //       console.log('Access token: ' + accessToken)
-  //       const todos = await getTodos(accessToken)
-  //       setTodos(todos)
-  //       setLoadingTodos(false)
-  //     } catch (e) {
-  //       alert(`Failed to fetch todos: ${e.message}`)
-  //     }
-  //   }
-  //   foo()
-  // }, [getAccessTokenSilently])
+  useEffect(() => {
+    async function foo() {
+      try {
+        const accessToken = await getAccessTokenSilently({
+          audience: `https://fremfi.auth0.com/api/v2/`,
+          scope: 'read:todos'
+        })
+        console.log('Access token: ' + accessToken)
+        const todos = await getTodos(accessToken)
+        setTodos(todos)
+        setLoadingTodos(false)
+      } catch (e) {
+        alert(`Failed to fetch todos: ${e.message}`)
+      }
+    }
+    foo()
+  }, [getAccessTokenSilently])
 
   return (
     <div>
@@ -148,7 +144,7 @@ export function Todos() {
 
       <NewTodoInput onNewTodo={(newTodo) => setTodos([...todos, newTodo])} />
 
-      {/*{renderTodos(loadingTodos, todos)}*/}
+      {renderTodos(loadingTodos, todos)}
     </div>
   )
 }
